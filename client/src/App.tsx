@@ -14,17 +14,23 @@ const queryClient = new QueryClient({
   },
 });
 
+function RouteApp() {
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/feed" element={<FeedPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
+  )
+}
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/feed" element={<FeedPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
+          <RouteApp />
         </BrowserRouter>
       </AuthProvider>
     </QueryClientProvider>

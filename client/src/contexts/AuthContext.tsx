@@ -11,11 +11,11 @@ const AuthContext = createContext<AuthContextValue>(null)
 const getInitialState = (): AuthState => {
     const token = localStorage.getItem('token');
     const userRaw = localStorage.getItem('user');
-    try{
-       const user: User | null = userRaw ? (JSON.parse(userRaw)) : null;
-       return { token, user, isAuthenticated: !!token && !!user }
+    try {
+        const user: User | null = userRaw ? (JSON.parse(userRaw)) : null;
+        return { token, user, isAuthenticated: !!token && !!user }
     }
-    catch{
+    catch {
         return { token: null, user: null, isAuthenticated: false }
     }
 }
@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         setState({ user: null, token: null, isAuthenticated: false })
-    }, []) 
+    }, [])
 
     return (
         <AuthContext.Provider value={{ ...state, login, logout }}>
