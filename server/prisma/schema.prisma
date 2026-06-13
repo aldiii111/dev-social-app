@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
@@ -13,3 +13,45 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id         String   @id @default(uuid())
+  google_id  String   @unique
+  name       String
+  email      String   @unique
+  avatar_url String?
+  github_url String?
+  created_at DateTime @default(now())
+  posts      Post[]
+}
+
+model Post {
+  id          String      @id @default(uuid())
+  user_id     String
+  title       String
+  description String
+  image_url   String?
+  looking_for LookingFor
+  created_at  DateTime    @default(now())
+  
+  user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  stacks      PostStack[]
+}
+
+model PostStack {
+  id         Int    @id @default(autoincrement())
+  post_id    String
+  stack_name String
+
+  post       Post   @relation(fields: [post_id], references: [id], onDelete: Cascade)
+}
+
+enum LookingFor {
+  Frontend
+  Backend
+  UI_UX @map("UI/UX")
+  Fullstack
+  Mobile
+  DevOps
+}
+
