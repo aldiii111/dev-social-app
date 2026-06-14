@@ -145,7 +145,7 @@ export default function LoginPage() {
               </span>
               .
             </h1>
-            <p className="text-zinc-500/70 text-lg font-light leading-relaxed">
+            <p className="text-zinc-500/80 text-lg font-light leading-relaxed">
               Find partners for side projects, share code snippets, showcase your stack, and grow your network with devs who speak your language.
             </p>
           </div>
