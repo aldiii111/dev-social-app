@@ -1,4 +1,5 @@
 import React, { useState, useContext, createContext, useCallback } from "react";
+import { authService } from "@/services/authService";
 import type { AuthState, User } from "@/types";
 
 interface AuthContextValue extends AuthState {
@@ -27,13 +28,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
         setState({ user, token, isAuthenticated: true })
-    }, [])
+    }, []);
 
     const logout = useCallback(() => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setState({ user: null, token: null, isAuthenticated: false })
-    }, [])
+        authService.logout();
+        setState({ user: null, token: null, isAuthenticated: false });
+    }, []);
 
     return (
         <AuthContext.Provider value={{ ...state, login, logout }}>
