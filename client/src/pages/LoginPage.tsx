@@ -6,14 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Code2, Terminal, Sparkles, AlertCircle, ArrowRight, ShieldCheck, Heart } from "lucide-react";
+import { Code2, Terminal, Sparkles, AlertCircle, ArrowRight, ShieldCheck } from "lucide-react";
 
 export default function LoginPage() {
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Custom Demo Login Form States
   const [demoName, setDemoName] = useState("Alex Developer");
   const [demoEmail, setDemoEmail] = useState("alex@devconnect.dev");
@@ -29,7 +29,7 @@ export default function LoginPage() {
   // Initialize Google Identity Services
   useEffect(() => {
     const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "MOCK_CLIENT_ID";
-    
+
     const initializeGoogle = () => {
       if (window.google?.accounts?.id) {
         window.google.accounts.id.initialize({
@@ -46,7 +46,7 @@ export default function LoginPage() {
             } catch (err: any) {
               console.error("Google Auth Error:", err);
               setError(
-                err.response?.data?.message || 
+                err.response?.data?.message ||
                 "Failed to authenticate with Google. Please try using Demo Login."
               );
             } finally {
@@ -99,11 +99,11 @@ export default function LoginPage() {
           created_at: new Date().toISOString(),
         };
         const mockToken = `demo-jwt-token-${Date.now()}`;
-        
+
         // Save locally to mimic authService behavior
         localStorage.setItem("token", mockToken);
         localStorage.setItem("user", JSON.stringify(mockUser));
-        
+
         login(mockUser, mockToken);
         navigate("/feed");
       } catch (err) {
@@ -116,142 +116,127 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col md:flex-row relative overflow-hidden font-sans transition-colors duration-200">
-      {/* Decorative ambient glowing backdrops */}
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none dark:bg-blue-600/5" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[45%] h-[45%] rounded-full bg-indigo-500/10 blur-[100px] pointer-events-none dark:bg-indigo-600/5" />
 
-      {/* Left Panel: Cool interactive visual code dashboard */}
-      <div className="hidden md:flex flex-col justify-between w-1/2 p-12 bg-zinc-950/15 dark:bg-zinc-950/40 border-r border-border relative">
+      <div className="hidden md:flex flex-col justify-between w-1/2 p-12 bg-sidebar text-sidebar-foreground border-r border-sidebar-border relative">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20">
             <Code2 className="w-6 h-6 animate-pulse" />
           </div>
-          <span className="font-bold text-xl tracking-tight bg-zinc-100 bg-clip-text text-transparent">
+          <span className="font-bold text-xl tracking-tight text-foreground">
             DevConnect
           </span>
         </div>
 
-        {/* Feature visualization card (UIUXProMax styling) */}
         <div className="my-auto max-w-lg space-y-8">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-blue-500 border border-blue-500/20 backdrop-blur-md">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5" />
               Empowering Developers Everywhere
             </div>
-            <h1 className="text-4xl lg:text-5xl font-extrabold leading-[1.15] tracking-tight text-white">
+            <h1 className="text-4xl lg:text-5xl font-extrabold leading-[1.15] tracking-tight text-foreground">
               The social network built exclusively for{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400">
                 developers
               </span>
               .
             </h1>
-            <p className="text-zinc-500/80 text-lg font-light leading-relaxed">
+            <p className="text-muted-foreground text-lg font-light leading-relaxed">
               Find partners for side projects, share code snippets, showcase your stack, and grow your network with devs who speak your language.
             </p>
           </div>
 
-          {/* Interactive Code Preview Window */}
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 shadow-2xl backdrop-blur-md overflow-hidden transition-all duration-300 hover:border-zinc-700/80">
-            <div className="flex items-center justify-between px-4 py-3 bg-zinc-950/80 border-b border-zinc-800/80">
+          <div className="rounded-2xl border border-border bg-muted/40 dark:bg-zinc-950/30 shadow-2xl backdrop-blur-md overflow-hidden transition-all duration-300 hover:border-border/80">
+            <div className="flex items-center justify-between px-4 py-3 bg-muted/80 dark:bg-zinc-950/60 border-b border-border">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-red-500/80" />
                 <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
                 <span className="w-3 h-3 rounded-full bg-green-500/80" />
               </div>
-              <span className="text-xs font-mono text-zinc-500 flex items-center gap-1.5">
+              <span className="text-xs font-mono text-muted-foreground flex items-center gap-1.5">
                 <Terminal className="w-3 h-3" /> devconnect.ts
               </span>
             </div>
-            <div className="p-5 font-mono text-sm leading-relaxed overflow-x-auto text-zinc-300">
-              <p className="text-zinc-300/60">// Initialize your developer connection</p>
+            <div className="p-5 font-mono text-sm leading-relaxed overflow-x-auto text-foreground/90">
+              <p className="text-muted-foreground/60">// Initialize your developer connection</p>
               <p>
-                <span className="text-pink-400">const</span> developer ={" "}
-                <span className="text-blue-400">await</span> DevConnect.
-                <span className="text-green-400">join</span>(&#123;
+                <span className="text-pink-500 dark:text-pink-400">const</span> developer ={" "}
+                <span className="text-blue-600 dark:text-blue-400">await</span> DevConnect.
+                <span className="text-emerald-600 dark:text-green-400">join</span>(&#123;
               </p>
               <p className="pl-4">
-                skills: [<span className="text-amber-300">"React"</span>,{" "}
-                <span className="text-amber-300">"Tailwind"</span>,{" "}
-                <span className="text-amber-300">"Node.js"</span>],
+                skills: [<span className="text-amber-600 dark:text-amber-300">"React"</span>,{" "}
+                <span className="text-amber-600 dark:text-amber-300">"Tailwind"</span>,{" "}
+                <span className="text-amber-600 dark:text-amber-300">"Node.js"</span>],
               </p>
               <p className="pl-4">
-                passions: [<span className="text-amber-300">"Open Source"</span>,{" "}
-                <span className="text-amber-300">"Pair Programming"</span>],
+                passions: [<span className="text-amber-600 dark:text-amber-300">"Open Source"</span>,{" "}
+                <span className="text-amber-600 dark:text-amber-300">"Pair Programming"</span>],
               </p>
               <p className="pl-4">
-                readyToCollaborate: <span className="text-purple-400">true</span>
+                readyToCollaborate: <span className="text-purple-600 dark:text-purple-400">true</span>
               </p>
               <p>&#125;);</p>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-xs text-zinc-500">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} DevConnect. Open source community.</p>
-          <div className="flex items-center gap-1">
-            <span>Crafted with</span>
-            <Heart className="w-3 h-3 text-red-500 fill-red-500" />
-            <span>for hackers.</span>
-          </div>
         </div>
       </div>
 
-      {/* Right Panel: Sleek, Glassmorphic Login Form */}
       <div className="flex-1 flex flex-col justify-center items-center p-6 md:p-12 z-10">
-        {/* Mobile Header */}
         <div className="flex md:hidden items-center gap-2.5 mb-8">
           <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md">
             <Code2 className="w-6 h-6" />
           </div>
-          <span className="font-bold text-xl tracking-tight">DevConnect</span>
+          <span className="font-bold text-xl tracking-tight text-foreground">DevConnect</span>
         </div>
 
         <div className="w-full max-w-md">
           <Card className="border border-border bg-card/75 backdrop-blur-lg shadow-xl relative overflow-hidden transition-all duration-300 hover:shadow-2xl">
-            {/* Ambient accent top-line */}
             <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600" />
 
             <CardHeader className="space-y-2.5 pt-8">
-              <CardTitle className="text-2xl font-bold tracking-tight text-center md:text-left">
+              <CardTitle className="text-2xl font-bold tracking-tight text-center md:text-left text-foreground">
                 Welcome back
               </CardTitle>
-              <CardDescription className="text-center md:text-left text-zinc-400 dark:text-zinc-500">
+              <CardDescription className="text-center md:text-left text-muted-foreground">
                 Choose your preferred way to sign in and connect.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {error && (
-                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm animate-shake">
+                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm animate-shake">
                   <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
                   <p className="leading-snug">{error}</p>
                 </div>
               )}
 
-              {/* Official Google Login Button Placeholder Container */}
               <div className="space-y-3">
-                <div 
-                  id="google-signin-btn" 
+                <div
+                  id="google-signin-btn"
                   className="w-full flex justify-center py-0.5 rounded-full overflow-hidden transition-all duration-200"
                 />
-                <p className="text-[11px] text-center text-zinc-500">
+                <p className="text-[11px] text-center text-muted-foreground">
                   Secured by Google Identity. No passwords needed.
                 </p>
               </div>
 
-              {/* Separator */}
               <div className="relative flex items-center justify-center">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-border" />
                 </div>
-                <span className="relative px-3 text-xs uppercase bg-card text-zinc-500">
+                <span className="relative px-3 text-xs uppercase bg-card text-muted-foreground">
                   Or use Demo Access
                 </span>
               </div>
 
-              {/* Bypass/Demo Login Form */}
               <form onSubmit={handleDemoLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                  <Label htmlFor="name" className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     Full Name
                   </Label>
                   <Input
@@ -261,12 +246,12 @@ export default function LoginPage() {
                     onChange={(e) => setDemoName(e.target.value)}
                     required
                     placeholder="e.g. Linus Torvalds"
-                    className="bg-background/50 border-zinc-700/50 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl"
+                    className="bg-background border-input focus-visible:ring-1 focus-visible:ring-ring rounded-xl"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                  <Label htmlFor="email" className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     Email Address
                   </Label>
                   <Input
@@ -276,13 +261,12 @@ export default function LoginPage() {
                     onChange={(e) => setDemoEmail(e.target.value)}
                     required
                     placeholder="e.g. linus@kernel.org"
-                    className="bg-background/50 border-zinc-700/50 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl"
+                    className="bg-background border-input focus-visible:ring-1 focus-visible:ring-ring rounded-xl"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="github" className="text-xs font-semibold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
-                    {/* <Github className="w-3.5 h-3.5 text-zinc-400" /> */}
+                  <Label htmlFor="github" className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
                     GitHub Profile Link (Optional)
                   </Label>
                   <Input
@@ -291,12 +275,12 @@ export default function LoginPage() {
                     value={demoGithub}
                     onChange={(e) => setDemoGithub(e.target.value)}
                     placeholder="github.com/torvalds"
-                    className="bg-background/50 border-zinc-700/50 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl"
+                    className="bg-background border-input focus-visible:ring-1 focus-visible:ring-ring rounded-xl"
                   />
                 </div>
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={loading}
                   className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium shadow-lg shadow-blue-500/10 py-6 rounded-xl transition-all duration-200 hover:-translate-y-[1px] active:translate-y-[1px] cursor-pointer flex items-center justify-center gap-2 group"
                 >
@@ -312,8 +296,8 @@ export default function LoginPage() {
               </form>
             </CardContent>
 
-            <CardFooter className="pb-8 pt-2 justify-center border-t border-border/50 bg-zinc-950/5">
-              <span className="text-xs text-zinc-500 flex items-center gap-1">
+            <CardFooter className="pb-8 pt-2 justify-center border-t border-border/50 bg-muted/20">
+              <span className="text-xs text-muted-foreground flex items-center gap-1">
                 <ShieldCheck className="w-4 h-4 text-emerald-500" />
                 This is a secure playground environment
               </span>
