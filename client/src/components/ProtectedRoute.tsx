@@ -6,5 +6,11 @@ export function ProtectedRoute({
 }: {
     children: React.ReactNode
 }) {
-    
+   const { isAuthenticated } = useAuth()
+
+   if (!isAuthenticated) {
+    return <Navigate to={"/login"} />
+   }
+   
+   return children
 }

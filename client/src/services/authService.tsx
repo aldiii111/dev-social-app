@@ -31,14 +31,16 @@ export const authService = {
     logout(): void {
         localStorage.removeItem('token')
         localStorage.removeItem('user')
-        // Mencegah Google auto-login ulang setelah logout
-        // (tanpa ini user akan langsung re-login saat buka halaman lagi)
         if (window.google?.accounts?.id) {
             window.google.accounts.id.disableAutoSelect()
         }
     },
 
     getToken(): string | null {
-        return localStorage.getItem('token')
+        return localStorage.getItem("token");
+    },
+
+    isAuthenticated(): boolean {
+        return !!localStorage.getItem("token");
     }
 }
