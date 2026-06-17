@@ -3,27 +3,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Heart, MessageSquare, Share2, CornerUpRight } from "lucide-react";
-import { Post } from "./SidebarNavigation"; // We'll export the Post interface or redeclare it cleanly to resolve dependencies.
+import Post from "./SidebarNavigation"; // We'll export the Post interface or redeclare it cleanly to resolve dependencies.
+import type { PostItem } from "@/types";
 
-export interface Author {
-  id: string;
-  name: string;
-  avatarUrl: string;
-  username: string;
-}
-
-export interface PostItem {
-  id: string;
-  author: Author;
-  content: string;
-  imageUrl?: string;
-  likesCount: number;
-  commentsCount: number;
-  isLiked: boolean;
-  createdAt: string;
-}
-
-export interface PostCardProps {
+interface PostCardProps {
   post: PostItem;
   onLike: (postId: string) => void;
   onCommentClick: (postId: string) => void;

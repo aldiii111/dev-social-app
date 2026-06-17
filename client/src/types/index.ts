@@ -18,17 +18,22 @@ export interface PostStack {
 
 export type LookingFor = 'Frontend' | 'Backend' | 'UI/UX' | 'Fullstack' | 'Mobile' | 'DevOps';
 
-export interface Post {
+export interface Author {
   id: string;
-  user_id: string;
-  title: string;
-  description: string;
-  image_url: string | null;
-  looking_for: LookingFor;
-  created_at: string;
-  // Joined relations from API
-  user: User;
-  stacks: PostStack[];
+  name: string;
+  avatarUrl: string;
+  username: string;
+}
+
+export interface PostItem {
+  id: string;
+  author: Author;
+  content: string;
+  imageUrl?: string;
+  likesCount: number;
+  commentsCount: number;
+  isLiked: boolean;
+  createdAt: string;
 }
 
 export interface CreatePostPayload {
