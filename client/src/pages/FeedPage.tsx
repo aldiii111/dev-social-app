@@ -1,196 +1,173 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Code2, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import FeedAppShell from "@/features/feed/components/FeedAppShell";
+import FeedHeader from "@/features/feed/components/FeedHeader";
 import SidebarNavigation from "@/features/feed/components/SidebarNavigation";
-import CreatePostForm from "@/features/feed/components/CreatePostForm";
+import MobileBottomNav from "@/features/feed/components/MobileBottomNav";
+import FeedTabPanel from "@/features/feed/components/FeedTabPanel";
+import AddPostTabPanel from "@/features/feed/components/AddPostTabPanel";
+import ProfileTabPanel from "@/features/feed/components/ProfileTabPanel";
+import CreateCollaborationPostForm from "@/features/feed/components/CreateCollaborationPostForm";
 import PostList from "@/features/feed/components/PostList";
-import TrendingWidget, { TrendingItem } from "@/features/feed/components/TrendingWidget";
-import { PostItem } from "@/features/feed/components/PostCard";
+import { TrendingWidget } from "@/features/feed/components/TrendingWidget";
+import ProfileSummaryCard from "@/features/profile/components/ProfileSummaryCard";
+import type {
+  CollaborationPostView,
+  CreateCollaborationPostValues,
+  FeedTab,
+  TrendingTagView,
+} from "@/features/feed/types";
+import { EMPTY_CREATE_POST_VALUES } from "@/features/feed/types";
 
 export default function FeedPage() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [currentTab, setCurrentTab] = useState<"feed" | "profile" | "addpost">("feed");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // Mock Feed Data - Managed locally in the Orchestrator
-  const [posts, setPosts] = useState<PostItem[]>([
-    {
-      id: "1",
-      author: {
-        id: "u1",
-        name: "Sarah Jenkins",
-        username: "sarah_js",
-        avatarUrl: "https://api.dicebear.com/7.x/adventurer/svg?seed=sarah",
-      },
-      content: "Exploring collaborative editor backends today. Building out WebSockets handlers with Express! Feel free to connect to join this project.",
-      likesCount: 12,
-      commentsCount: 3,
-      isLiked: false,
-      createdAt: "2 hrs ago",
-    },
-    {
-      id: "2",
-      author: {
-        id: "u2",
-        name: "Aris Munandar",
-        username: "arismun",
-        avatarUrl: "https://api.dicebear.com/7.x/adventurer/svg?seed=aris",
-      },
-      content: "Just dockerized a Redis cluster locally for testing message brokers. Go microservices are running beautifully in clusters.",
-      likesCount: 45,
-      commentsCount: 19,
-      isLiked: true,
-      createdAt: "5 hrs ago",
-    }
-  ]);
 
-  const trends: TrendingItem[] = [
-    { tag: "react", postCount: 142 },
-    { tag: "go", postCount: 88 },
-    { tag: "websockets", postCount: 41 },
-    { tag: "docker", postCount: 30 }
-  ];
+  // --- UI state (orchestrator) ---
+  const [activeTab, setActiveTab] = useState<FeedTab>("feed");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [formValues, setFormValues] =
+    useState<CreateCollaborationPostValues>(EMPTY_CREATE_POST_VALUES);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | undefined>();
+  const [isDarkMode, setIsDarkMode] = useState(() =>
+    document.documentElement.classList.contains("dark")
+  );
+
+  // --- Data slots: ISI via TanStack Query (lihat panduan di bawah) ---
+  const posts: CollaborationPostView[] = [];
+  const trends: TrendingTagView[] = [];
+  const isPostsLoading = false;
+  const isTrendsLoading = false;
+
+  const handleFieldChange = <K extends keyof CreateCollaborationPostValues>(
+    field: K,
+    value: CreateCollaborationPostValues[K]
+  ) => {
+    setFormValues((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
-  const handleCreatePost = async (content: string, imageFile?: File) => {
+  const handleToggleTheme = () => {
+    document.documentElement.classList.toggle("dark");
+    setIsDarkMode(document.documentElement.classList.contains("dark"));
+  };
+
+  const handleCreatePost = () => {
+    // STEP 2: ganti dengan useMutation(createPost) — lihat panduan integrasi
     setIsSubmitting(true);
-    // Mimic API delay
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
-    const newPost: PostItem = {
-      id: Date.now().toString(),
-      author: {
-        id: user?.id || "u-guest",
-        name: user?.name || "Guest Developer",
-        username: user?.email ? user.email.split("@")[0] : "guest_dev",
-        avatarUrl: user?.avatar_url || "https://api.dicebear.com/7.x/adventurer/svg?seed=guest",
-      },
-      content,
-      imageUrl: imageFile ? URL.createObjectURL(imageFile) : undefined,
-      likesCount: 0,
-      commentsCount: 0,
-      isLiked: false,
-      createdAt: "Just now",
-    };
-
-    setPosts([newPost, ...posts]);
+    setSubmitError(undefined);
     setIsSubmitting(false);
-    setCurrentTab("feed"); // switch back to feed view on mobile/desktop
   };
 
-  const handleLikePost = (postId: string) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === postId
-          ? {
-              ...post,
-              likesCount: post.isLiked ? post.likesCount - 1 : post.likesCount + 1,
-              isLiked: !post.isLiked,
-            }
-          : post
-      )
-    );
+  const handleContactAuthor = (postId: string) => {
+    // STEP 1: cari post by id, buka author.githubUrl di tab baru
+    const post = posts.find((item) => item.id === postId);
+    if (post?.author.githubUrl) {
+      window.open(post.author.githubUrl, "_blank", "noopener,noreferrer");
+    }
   };
 
-  const handleCommentClick = (postId: string) => {
-    console.log(`Comment modal or view request for post: ${postId}`);
-  };
-
-  const handleTagClick = (tag: string) => {
+  const handleTrendingTagClick = (tag: string) => {
     setSearchQuery(`#${tag}`);
+    setActiveTab("feed");
+  };
+
+  const filteredPosts = posts.filter((post) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase().replace(/^#/, "");
+    return (
+      post.title.toLowerCase().includes(query) ||
+      post.description.toLowerCase().includes(query) ||
+      post.stacks.some((stack) => stack.toLowerCase().includes(query)) ||
+      post.lookingFor.toLowerCase().includes(query)
+    );
+  });
+
+  const createForm = (
+    <CreateCollaborationPostForm
+      values={formValues}
+      onFieldChange={handleFieldChange}
+      onSubmit={handleCreatePost}
+      isSubmitting={isSubmitting}
+      errorMessage={submitError}
+    />
+  );
+
+  const renderMainContent = () => {
+    switch (activeTab) {
+      case "feed":
+        return (
+          <FeedTabPanel
+            showInlineForm
+            createForm={createForm}
+            postList={
+              <PostList
+                posts={filteredPosts}
+                isLoading={isPostsLoading}
+                onContactAuthor={handleContactAuthor}
+              />
+            }
+          />
+        );
+      case "addpost":
+        return <AddPostTabPanel createForm={createForm} />;
+      case "profile":
+        return (
+          <ProfileTabPanel>
+            <ProfileSummaryCard
+              name={user?.name ?? "Developer"}
+              email={user?.email ?? "dev@example.com"}
+              avatarUrl={user?.avatar_url}
+              githubUrl={user?.github_url}
+              postCount={0}
+            />
+          </ProfileTabPanel>
+        );
+      default:
+        return null;
+    }
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-200 pb-20 md:pb-0 flex flex-col font-sans">
-      {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="p-1.5 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 text-white">
-            <Code2 className="w-5 h-5" />
-          </div>
-          <span className="font-bold text-lg tracking-tight">DevConnect</span>
-        </div>
-
-        {/* Global Search Bar */}
-        <div className="hidden md:flex items-center relative w-96">
-          <Search className="w-4 h-4 text-muted-foreground absolute left-3" />
-          <Input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search posts, technologies, or tags..."
-            className="pl-9 pr-4 py-1.5 bg-secondary/50 border-zinc-200 dark:border-zinc-800 rounded-full text-sm focus-visible:ring-blue-500/30"
-          />
-        </div>
-
-        <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center font-bold text-xs">
-          {user?.name?.slice(0, 2).toUpperCase() || "GD"}
-        </div>
-      </header>
-
-      {/* Main Container Layout */}
-      <div className="max-w-7xl w-full mx-auto flex-1 flex px-4 lg:px-6 gap-6 pt-6">
-        {/* Left Column (Navigation Sidebar) */}
+    <FeedAppShell
+      header={
+        <FeedHeader
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          userAvatarUrl={user?.avatar_url}
+          userInitials={user?.name?.slice(0, 2).toUpperCase() ?? "DC"}
+        />
+      }
+      sidebar={
         <SidebarNavigation
-          currentTab={currentTab}
-          onTabChange={setCurrentTab}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          isDarkMode={isDarkMode}
+          onToggleTheme={handleToggleTheme}
           onLogout={handleLogout}
         />
-
-        {/* Center Feed Column */}
-        <main className="flex-1 max-w-2xl mx-auto space-y-6">
-          {/* Conditional rendering based on navigation selection */}
-          {currentTab === "feed" && (
-            <>
-              <div className="hidden md:block">
-                <CreatePostForm onSubmit={handleCreatePost} isSubmitting={isSubmitting} />
-              </div>
-              <PostList
-                posts={posts}
-                isLoading={false}
-                onLikePost={handleLikePost}
-                onCommentPost={handleCommentClick}
-              />
-            </>
-          )}
-
-          {currentTab === "addpost" && (
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold tracking-tight text-left">Create New Post</h2>
-              <CreatePostForm onSubmit={handleCreatePost} isSubmitting={isSubmitting} />
-            </div>
-          )}
-
-          {currentTab === "profile" && (
-            <div className="text-left space-y-4">
-              <h2 className="text-xl font-bold tracking-tight">Profile Playground</h2>
-              <div className="border border-border p-6 rounded-2xl bg-card/65 backdrop-blur-md">
-                <p className="font-semibold text-lg">{user?.name || "Guest Developer"}</p>
-                <p className="text-sm text-muted-foreground">@{user?.email?.split("@")[0] || "guest"}</p>
-                <p className="text-sm mt-3 text-zinc-600 dark:text-zinc-400">
-                  Welcome to your developer profile sandbox. Real integration steps are outlined for customization.
-                </p>
-              </div>
-            </div>
-          )}
-        </main>
-
-        {/* Right Column (Widget panel) */}
-        <aside className="hidden lg:block w-80 shrink-0 space-y-6">
-          <TrendingWidget
-            trends={trends}
-            isLoading={false}
-            onTagClick={handleTagClick}
-          />
-        </aside>
-      </div>
-    </div>
+      }
+      main={renderMainContent()}
+      aside={
+        <TrendingWidget
+          trends={trends}
+          isLoading={isTrendsLoading}
+          onTagClick={handleTrendingTagClick}
+        />
+      }
+      mobileNav={
+        <MobileBottomNav
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onLogout={handleLogout}
+        />
+      }
+    />
   );
 }
