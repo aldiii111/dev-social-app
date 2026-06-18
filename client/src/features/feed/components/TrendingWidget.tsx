@@ -1,51 +1,51 @@
-import React from "react";
 import { Card } from "@/components/ui/card";
-import { TrendingUp, Skeleton } from "lucide-react";
-
-export interface TrendingItem {
-  tag: string;
-  postCount: number;
-}
+import { TrendingUp } from "lucide-react";
+import type { TrendingTagView } from "@/features/feed/types";
 
 export interface TrendingWidgetProps {
-  trends: TrendingItem[];
+  trends: TrendingTagView[];
   isLoading: boolean;
   onTagClick: (tag: string) => void;
 }
 
-export default function TrendingWidget({
+export function TrendingWidget({
   trends,
   isLoading,
   onTagClick,
 }: TrendingWidgetProps) {
   return (
-    <Card className="border border-border bg-card/45 backdrop-blur-md rounded-2xl p-5">
-      <h4 className="font-bold text-sm tracking-tight mb-4 flex items-center gap-2">
-        <TrendingUp className="w-4 h-4 text-emerald-500" />
+    <Card className="rounded-2xl border border-border bg-card p-5 transition-colors duration-200">
+      <h4 className="mb-4 flex items-center gap-2 text-sm font-bold tracking-tight">
+        <TrendingUp className="h-4 w-4 text-emerald-500" />
         Trending Technologies
       </h4>
 
       {isLoading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((n) => (
-            <div key={n} className="flex justify-between items-center">
-              <div className="h-4 w-20 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-              <div className="h-3 w-12 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+            <div key={n} className="flex items-center justify-between">
+              <div className="h-4 w-20 animate-pulse rounded bg-muted" />
+              <div className="h-3 w-12 animate-pulse rounded bg-muted" />
             </div>
           ))}
         </div>
+      ) : trends.length === 0 ? (
+        <p className="text-xs text-muted-foreground">
+          Belum ada data trending. Data akan muncul setelah feed terhubung ke API.
+        </p>
       ) : (
-        <div className="space-y-3.5 text-xs text-left">
+        <div className="space-y-3.5 text-left text-xs">
           {trends.map((item) => (
             <button
               key={item.tag}
+              type="button"
               onClick={() => onTagClick(item.tag)}
-              className="flex justify-between items-center w-full group hover:text-blue-500 cursor-pointer transition-colors text-left"
+              className="group flex w-full cursor-pointer items-center justify-between text-left transition-colors duration-200 hover:text-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <span className="font-mono bg-secondary px-2.5 py-1 rounded-lg text-zinc-700 dark:text-zinc-300 group-hover:bg-blue-500/10 group-hover:text-blue-500 transition-colors">
+              <span className="rounded-lg bg-secondary px-2.5 py-1 font-mono text-zinc-700 transition-colors duration-200 group-hover:bg-blue-500/10 group-hover:text-blue-500 dark:text-zinc-300">
                 #{item.tag}
               </span>
-              <span className="text-muted-foreground font-semibold">
+              <span className="font-semibold text-muted-foreground">
                 {item.postCount} posts
               </span>
             </button>
