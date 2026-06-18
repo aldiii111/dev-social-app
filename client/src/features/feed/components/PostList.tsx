@@ -1,53 +1,30 @@
-import React from "react";
-import PostCard, { PostItem } from "./PostCard";
-import { AlertCircle } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Users } from "lucide-react";
+import type { CollaborationPostView } from "@/features/feed/types";
+import CollaborationPostCard from "./CollaborationPostCard";
+import PostListSkeleton from "./PostListSkeleton";
 
 export interface PostListProps {
-  posts: PostItem[];
+  posts: CollaborationPostView[];
   isLoading: boolean;
-  onLikePost: (postId: string) => void;
-  onCommentPost: (postId: string) => void;
+  onContactAuthor: (postId: string) => void;
 }
 
 export default function PostList({
   posts,
   isLoading,
-  onLikePost,
-  onCommentPost,
+  onContactAuthor,
 }: PostListProps) {
   if (isLoading) {
-    return (
-      <div className="space-y-4">
-        {[1, 2, 3].map((n) => (
-          <Card key={n} className="border border-border bg-card/65 p-5 rounded-2xl">
-            <CardContent className="p-0 space-y-4">
-              <div className="flex items-center gap-3">
-                <Skeleton className="w-10 h-10 rounded-full" />
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-32" />
-                  <Skeleton className="h-3 w-20" />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-5/6" />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
+    return <PostListSkeleton />;
   }
 
   if (posts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 border border-dashed border-border rounded-2xl bg-card/20 text-center">
-        <AlertCircle className="w-10 h-10 text-muted-foreground mb-3" />
-        <h4 className="font-bold text-base">No posts yet</h4>
-        <p className="text-xs text-muted-foreground max-w-xs mt-1">
-          Be the first to share your status or collaborating interests with other developers!
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/20 p-12 text-center">
+        <Users className="mb-3 h-10 w-10 text-muted-foreground" />
+        <h4 className="text-base font-bold">Belum ada postingan kolaborasi</h4>
+        <p className="mt-1 max-w-xs text-xs text-muted-foreground">
+          Jadilah developer pertama yang membagikan kebutuhan tim side-project Anda.
         </p>
       </div>
     );
@@ -56,11 +33,10 @@ export default function PostList({
   return (
     <div className="space-y-4">
       {posts.map((post) => (
-        <PostCard
+        <CollaborationPostCard
           key={post.id}
           post={post}
-          onLike={onLikePost}
-          onCommentClick={onCommentPost}
+          onContactClick={onContactAuthor}
         />
       ))}
     </div>
