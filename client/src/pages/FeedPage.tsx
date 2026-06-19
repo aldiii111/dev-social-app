@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import FeedAppShell from "@/features/feed/components/FeedAppShell";
-import FeedHeader from "@/features/feed/components/FeedHeader";
-import SidebarNavigation from "@/features/feed/components/SidebarNavigation";
-import MobileBottomNav from "@/features/feed/components/MobileBottomNav";
-import FeedTabPanel from "@/features/feed/components/FeedTabPanel";
-import AddPostTabPanel from "@/features/feed/components/AddPostTabPanel";
-import ProfileTabPanel from "@/features/feed/components/ProfileTabPanel";
+// import FeedAppShell from "@/features/feed/components/FeedAppShell";
+import FeedHeader from "@/components/FeedHeader";
+import SidebarNavigation from "@/components/SidebarNavigation";
+import MobileBottomNav from "@/components/MobileBottomNav";
+// import FeedTabPanel from "@/features/feed/components/FeedTabPanel";
+// import AddPostTabPanel from "@/features/feed/components/AddPostTabPanel";
+// import ProfileTabPanel from "@/features/feed/components/ProfileTabPanel";
 import CreateCollaborationPostForm from "@/features/feed/components/CreateCollaborationPostForm";
 import PostList from "@/features/feed/components/PostList";
-import { TrendingWidget } from "@/features/feed/components/TrendingWidget";
+import { TrendingWidget } from "@/components/TrendingWidget";
 import ProfileSummaryCard from "@/features/profile/components/ProfileSummaryCard";
 import type {
   CollaborationPostView,
@@ -31,15 +32,18 @@ export default function FeedPage() {
     useState<CreateCollaborationPostValues>(EMPTY_CREATE_POST_VALUES);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | undefined>();
-  const [isDarkMode, setIsDarkMode] = useState(() =>
-    document.documentElement.classList.contains("dark")
-  );
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // --- Data slots: ISI via TanStack Query (lihat panduan di bawah) ---
   const posts: CollaborationPostView[] = [];
   const trends: TrendingTagView[] = [];
   const isPostsLoading = false;
   const isTrendsLoading = false;
+
+  useEffect(() => {
+    const isDarkTheme = document.documentElement.classList.contains("dark");
+    setIsDarkMode(isDarkTheme);
+  }, [])
 
   const handleFieldChange = <K extends keyof CreateCollaborationPostValues>(
     field: K,
@@ -54,8 +58,15 @@ export default function FeedPage() {
   };
 
   const handleToggleTheme = () => {
-    document.documentElement.classList.toggle("dark");
-    setIsDarkMode(document.documentElement.classList.contains("dark"));
+    if (isDarkMode) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      setIsDarkMode(false);
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setIsDarkMode(true);
+    }
   };
 
   const handleCreatePost = () => {
