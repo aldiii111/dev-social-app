@@ -9,8 +9,19 @@ export interface CreatePostPayload {
   image_url?: string;
 }
 
-export const getAllPosts = async () => {
+export const getAllPosts = async (search?: string) => {
+  const where = search
+    ? {
+        OR: [
+          { title: { contains: search, mode: 'insensitive' as const } },
+          { description: { contains: search, mode: 'insensitive' as const } },
+          { stacks: { some: { stack_name: { contains: search, mode: 'insensitive' as const } } } },
+        ],
+      }
+    : {};
+
   return prisma.post.findMany({
+    where,
     orderBy: {
       created_at: 'desc',
     },

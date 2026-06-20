@@ -1,7 +1,5 @@
 import type { LookingFor } from "@/types";
 
-export type FeedTab = "feed" | "addpost" | "profile";
-
 export interface CollaborationPostAuthorView {
   id: string;
   name: string;
