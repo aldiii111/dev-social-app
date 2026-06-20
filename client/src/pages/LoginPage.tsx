@@ -22,7 +22,7 @@ export default function LoginPage() {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/page/feed");
+      navigate("/feed");
     }
   }, [isAuthenticated, navigate]);
 
@@ -42,7 +42,7 @@ export default function LoginPage() {
                 id_token: response.credential,
               });
               login(resData.user, resData.token);
-              navigate("page/feed");
+              navigate("/feed");
             } catch (err: any) {
               console.error("Google Auth Error:", err);
               setError(
@@ -105,7 +105,7 @@ export default function LoginPage() {
         localStorage.setItem("user", JSON.stringify(mockUser));
 
         login(mockUser, mockToken);
-        navigate("page/feed");
+        navigate("/feed");
       } catch (err) {
         setError("Something went wrong with the demo login.");
       } finally {

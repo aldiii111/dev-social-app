@@ -2,8 +2,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/contexts/AuthContext';
 import LoginPage from '@/pages/LoginPage';
-import MainPage from '@/components/layout/mainPage';
+import MainPageLayout from '@/components/layout/mainPage';
 import FeedPage from "@/pages/FeedPage";
+import AddPostPage from "@/pages/AddPostPage";
 import ProfilePage from "@/pages/ProfilePage";
 import { useEffect } from 'react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
@@ -22,11 +23,12 @@ function RouteApp() {
     <Routes>
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route element={<ProtectedRoute/>}>
-        <Route path="/page/*" element={<MainPage />}>
-          <Route index element={<FeedPage />} />
-          <Route path="page/feed" element={<FeedPage />} />
-          <Route path="page/profile" element={<ProfilePage />} />
+      <Route element={<ProtectedRoute />}>
+        <Route element={<MainPageLayout />}>
+          <Route index element={<Navigate to="/feed" replace />} />
+          <Route path="/feed" element={<FeedPage />} />
+          <Route path="/add-post" element={<AddPostPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/login" replace />} />

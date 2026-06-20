@@ -5,7 +5,8 @@ import type { CreatePostPayload } from '../services/posts.service.js';
 
 export const getPosts = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const posts = await getAllPosts();
+    const search = typeof req.query.search === 'string' ? req.query.search : undefined;
+    const posts = await getAllPosts(search);
     res.status(200).json({
       data: posts,
       message: 'Posts retrieved successfully',

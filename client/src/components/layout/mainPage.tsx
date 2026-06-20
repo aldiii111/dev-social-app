@@ -1,24 +1,41 @@
-import { Outlet } from 'react-router-dom';
-import { useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import SidebarNavigation from '../SidebarNavigation';
 import FeedHeader from '../FeedHeader';
 import MobileBottomNav from '../MobileBottomNav';
+import { TrendingWidget } from '../TrendingWidget';
+import type { TrendingTagView } from '@/features/feed/types';
 
 export default function MainPageLayout() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  // Temporary mock states for trending (will be replaced by TanStack Query / logic by USER)
+  const trends: TrendingTagView[] = [];
+  const isTrendsLoading = false;
+
+  const handleTrendingTagClick = (tag: string) => {
+    navigate(`/feed?search=${encodeURIComponent('#' + tag)}`);
+  };
+
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      <SidebarNavigation />
-      <div className="flex flex-col flex-1 overflow-hidden">
-        <FeedHeader 
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-        />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 pb-24 md:pb-6">
-          <Outlet /> 
+    <div className="flex min-h-screen flex-col bg-background pb-20 font-sans text-foreground transition-colors duration-200 md:pb-0">
+      <FeedHeader />
+
+      <div className="mx-auto flex w-full max-w-7xl flex-1 gap-6 px-4 pt-6 lg:px-6">
+        <SidebarNavigation />
+        <main className="mx-auto w-full max-w-2xl flex-1 space-y-6 xl:max-w-3xl">
+          <Outlet />
         </main>
-        <MobileBottomNav />
+
+        <aside className="hidden w-80 shrink-0 space-y-6 lg:block">
+          <TrendingWidget
+            trends={trends}
+            isLoading={isTrendsLoading}
+            onTagClick={handleTrendingTagClick}
+          />
+        </aside>
       </div>
+
+      <MobileBottomNav />
     </div>
   );
 }

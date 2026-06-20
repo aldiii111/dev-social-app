@@ -24,7 +24,7 @@ export default function AddPostPage() {
     // Logika mutasi kirim data ke API ditaruh di sini nanti
     
     setIsSubmitting(false);
-    navigate("page/feed"); // Setelah sukses, lempar user kembali ke feed
+    navigate("/feed"); // Setelah sukses, lempar user kembali ke feed
   };
 
   return (
