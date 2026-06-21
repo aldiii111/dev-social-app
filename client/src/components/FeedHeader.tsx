@@ -11,14 +11,16 @@ export default function FeedHeader() {
 
   const handleSearchChange = (value: string) => {
     const params = new URLSearchParams(searchParams);
-    if (value.trim()) {
-      params.set("search", value);
-    } else {
-      params.delete("search");
-    }
-    setSearchParams(params, { replace: true });
-  };
 
+    if(value.trim()) {
+      params.set("search", value)
+    }else {
+      params.delete("search")
+    }
+
+    setSearchParams(params, { replace: true })
+  };
+  
   const userInitials = user?.name?.slice(0, 2).toUpperCase() ?? "DC";
 
   return (

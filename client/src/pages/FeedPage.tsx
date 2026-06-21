@@ -1,12 +1,15 @@
 import { useSearchParams } from "react-router-dom";
 import CreateCollaborationPostForm from "@/features/feed/components/CreateCollaborationPostForm";
 import PostList from "@/features/feed/components/PostList";
+import { usePosts } from "@/hooks/queries/usePost";
 import type {
   CollaborationPostView,
   CreateCollaborationPostValues,
 } from "@/features/feed/types";
 import { EMPTY_CREATE_POST_VALUES } from "@/features/feed/types";
 import { useState } from "react";
+import FetchError from "@/components/FetchError";
+import SearchNotFound from "@/components/SearchNotFound";
 
 export default function FeedPage() {
   const [searchParams] = useSearchParams();
@@ -17,9 +20,11 @@ export default function FeedPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | undefined>();
 
-  // --- Data slots: ISI via TanStack Query (lihat panduan di bawah) ---
-  const posts: CollaborationPostView[] = [];
-  const isPostsLoading = false;
+  const { data: posts = [], isPending: isPostsLoading, isError } = usePosts();
+
+  if (isError) {
+
+  }
 
   const handleFieldChange = <K extends keyof CreateCollaborationPostValues>(
     field: K,
