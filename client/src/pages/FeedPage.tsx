@@ -39,6 +39,7 @@ export default function FeedPage() {
     createPostMutation.mutate(formValues, {
       onSuccess: () => {
         setIsSubmitting(false);
+        setFormValues(EMPTY_CREATE_POST_VALUES);
       },
       onError: (error: any) => {
         setIsSubmitting(false);
