@@ -9,6 +9,14 @@ export interface CreatePostPayload {
   image_url?: string;
 }
 
+const mapToPrismaEnum = (val: string): LookingFor => {
+  return (val === "UI/UX" ? "UI_UX" : val) as LookingFor;
+}
+
+const mapToClientEnum = (val: string): string => {
+  return val === "UI_UX" ? "UI/UX" : val;
+}
+
 export const getAllPosts = async (search?: string) => {
   const where = search
     ? {
@@ -20,7 +28,7 @@ export const getAllPosts = async (search?: string) => {
       }
     : {};
 
-  return prisma.post.findMany({
+  const post = await prisma.post.findMany({
     where,
     orderBy: {
       created_at: 'desc',
@@ -39,16 +47,20 @@ export const getAllPosts = async (search?: string) => {
       stacks: true,
     },
   });
+  return post.map(posts => ({
+    ...posts,
+    looking_for: mapToClientEnum(posts.looking_for) as LookingFor
+  }))
 };
 
 export const createNewPost = async (payload: CreatePostPayload, userId: string) => {
   const { title, description, looking_for, stacks, image_url } = payload;
 
-  return prisma.post.create({
+  const newPost = await prisma.post.create({
     data: {
       title,
       description,
-      looking_for,
+      looking_for: mapToPrismaEnum(looking_for as unknown as string),
       image_url: image_url || null,
       user_id: userId,
       stacks: {
@@ -71,4 +83,8 @@ export const createNewPost = async (payload: CreatePostPayload, userId: string) 
       stacks: true,
     },
   });
+  return {
+    ...newPost,
+    looking_for: mapToClientEnum(newPost.looking_for) as LookingFor  
+  }
 };
