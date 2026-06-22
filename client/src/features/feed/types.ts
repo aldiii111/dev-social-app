@@ -12,7 +12,7 @@ export interface CollaborationPostView {
   id: string;
   title: string;
   description: string;
-  lookingFor: LookingFor;
+  looking_for: LookingFor;
   stacks: string[];
   createdAt: string;
   imageUrl?: string | null;
@@ -27,7 +27,7 @@ export interface TrendingTagView {
 export interface CreateCollaborationPostValues {
   title: string;
   description: string;
-  lookingFor: LookingFor;
+  looking_for: LookingFor;
   stacks: string[];
 }
 
@@ -43,6 +43,6 @@ export const LOOKING_FOR_OPTIONS: LookingFor[] = [
 export const EMPTY_CREATE_POST_VALUES: CreateCollaborationPostValues = {
   title: "",
   description: "",
-  lookingFor: "Frontend",
+  looking_for: "Frontend",
   stacks: [],
 };

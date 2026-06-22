@@ -56,7 +56,7 @@ export default function CollaborationPostCard({
         )}
 
         <div className="flex flex-wrap items-center gap-2">
-          <LookingForBadge role={post.lookingFor} />
+          <LookingForBadge role={post.looking_for} />
           {post.stacks.map((stack) => (
             <TechStackBadge key={`${post.id}-${stack}`} stack={stack} />
           ))}
