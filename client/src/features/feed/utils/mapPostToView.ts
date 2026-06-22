@@ -17,7 +17,7 @@ export function mapPostToCollaborationView(post: Post): CollaborationPostView {
     id: post.id,
     title: post.title,
     description: post.description,
-    lookingFor: post.looking_for,
+    looking_for: post.looking_for,
     stacks: post.stacks.map((stack) => stack.stack_name),
     createdAt: post.created_at,
     imageUrl: post.image_url,

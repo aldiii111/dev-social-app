@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import CreateCollaborationPostForm from "@/features/feed/components/CreateCollaborationPostForm";
 import PostList from "@/features/feed/components/PostList";
-import { usePosts } from "@/hooks/queries/usePost";
+import { usePosts, useCreatePost } from "@/hooks/queries/usePost";
 import type {
   CollaborationPostView,
   CreateCollaborationPostValues,
@@ -14,16 +14,14 @@ import SearchNotFound from "@/components/SearchNotFound";
 export default function FeedPage() {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") ?? "";
-
   const [formValues, setFormValues] =
     useState<CreateCollaborationPostValues>(EMPTY_CREATE_POST_VALUES);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | undefined>();
-
   const { data: posts = [], isPending: isPostsLoading, isError } = usePosts();
 
   if (isError) {
-
+    return <FetchError />
   }
 
   const handleFieldChange = <K extends keyof CreateCollaborationPostValues>(
@@ -33,11 +31,20 @@ export default function FeedPage() {
     setFormValues((prev) => ({ ...prev, [field]: value }));
   };
 
+  const createPostMutation = useCreatePost();
   const handleCreatePost = () => {
-    // STEP 2: ganti dengan useMutation(createPost) — lihat panduan integrasi
     setIsSubmitting(true);
     setSubmitError(undefined);
-    setIsSubmitting(false);
+
+    createPostMutation.mutate(formValues, {
+      onSuccess: () => {
+        setIsSubmitting(false);
+      },
+      onError: (error: any) => {
+        setIsSubmitting(false);
+        setSubmitError(error.response?.data?.message || "Terjadi Kesalahan");
+      }
+    })
   };
 
   const handleContactAuthor = (postId: string) => {
@@ -55,7 +62,7 @@ export default function FeedPage() {
       post.title.toLowerCase().includes(query) ||
       post.description.toLowerCase().includes(query) ||
       post.stacks.some((stack) => stack.toLowerCase().includes(query)) ||
-      post.lookingFor.toLowerCase().includes(query)
+      post.looking_for.toLowerCase().includes(query)
     );
   });
 

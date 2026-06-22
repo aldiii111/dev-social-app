@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import CreateCollaborationPostForm from "@/features/feed/components/CreateCollaborationPostForm";
 import type { CreateCollaborationPostValues } from "@/features/feed/types";
 import { EMPTY_CREATE_POST_VALUES } from "@/features/feed/types";
+import { useCreatePost } from "@/hooks/queries/usePost";
 
 export default function AddPostPage() {
   const navigate = useNavigate();
@@ -17,14 +18,21 @@ export default function AddPostPage() {
     setFormValues((prev) => ({ ...prev, [field]: value }));
   };
 
+  const createPostMutation = useCreatePost();
   const handleCreatePost = () => {
     setIsSubmitting(true);
     setSubmitError(undefined);
-    
-    // Logika mutasi kirim data ke API ditaruh di sini nanti
-    
-    setIsSubmitting(false);
-    navigate("/feed"); // Setelah sukses, lempar user kembali ke feed
+
+    createPostMutation.mutate(formValues, {
+      onSuccess: () => {
+        setIsSubmitting(false);
+        navigate("/feed")
+      },
+      onError: (error: any) => {
+        setIsSubmitting(false);
+        setSubmitError(error.response?.data?.message || "Terjadi Kesalahan");
+      }
+    })
   };
 
   return (
