@@ -10,3 +10,8 @@ export const createPost = async (_payload: CreatePostPayload): Promise<Post> => 
   const response = await api.post<ApiResponse<Post>>('/posts', _payload);
   return response.data.data;
 };
+
+export const fecthPostUser = async (userId: string): Promise<Post[]> => {
+  const response = await api.get<ApiResponse<Post[]>>(`/posts?user_id=${userId}`);
+  return response.data.data;
+}

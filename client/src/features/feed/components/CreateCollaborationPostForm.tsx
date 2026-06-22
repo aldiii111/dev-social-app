@@ -73,8 +73,8 @@ export default function CreateCollaborationPostForm({
         </div>
 
         <LookingForSelectField
-          value={values.lookingFor}
-          onChange={(value) => onFieldChange("lookingFor", value)}
+          value={values.looking_for}
+          onChange={(value) => onFieldChange("looking_for", value)}
           disabled={isFormDisabled}
         />
 
