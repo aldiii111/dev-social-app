@@ -16,6 +16,7 @@ export const usePostUser = (userId?: string) => {
         queryKey: queryKeys.posts.userPost(userId),
         queryFn: () => fecthPostUser(userId),
         enabled: !!userId,
+        select: (data) => mapPostsToCollaborationViews(data)
     })
 }
 
