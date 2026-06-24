@@ -17,16 +17,25 @@ const mapToClientEnum = (val: string): string => {
   return val === "UI_UX" ? "UI/UX" : val;
 }
 
-export const getAllPosts = async (search?: string) => {
-  const where = search
-    ? {
-        OR: [
-          { title: { contains: search, mode: 'insensitive' as const } },
-          { description: { contains: search, mode: 'insensitive' as const } },
-          { stacks: { some: { stack_name: { contains: search, mode: 'insensitive' as const } } } },
-        ],
-      }
-    : {};
+interface GetAllPostsFilters {
+  search?: string;
+  userId?: string;
+}
+
+export const getAllPosts = async ({ search, userId }: GetAllPostsFilters = {}) => {
+  const where: Record<string, unknown> = {};
+
+  if (userId) {
+    where.user_id = userId;
+  }
+
+  if (search) {
+    where.OR = [
+      { title: { contains: search, mode: 'insensitive' as const } },
+      { description: { contains: search, mode: 'insensitive' as const } },
+      { stacks: { some: { stack_name: { contains: search, mode: 'insensitive' as const } } } },
+    ];
+  }
 
   const post = await prisma.post.findMany({
     where,
@@ -87,4 +96,18 @@ export const createNewPost = async (payload: CreatePostPayload, userId: string) 
     ...newPost,
     looking_for: mapToClientEnum(newPost.looking_for) as LookingFor  
   }
+};
+
+export const getTrendingStacks = async (limit: number = 10) => {
+  const trending = await prisma.postStack.groupBy({
+    by: ['stack_name'],
+    _count: { post_id: true },
+    orderBy: { _count: { post_id: 'desc' } },
+    take: limit,
+  });
+
+  return trending.map((item) => ({
+    tag: item.stack_name,
+    postCount: item._count.post_id,
+  }));
 };
