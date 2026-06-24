@@ -18,8 +18,8 @@ const mapToClientEnum = (val: string): string => {
 }
 
 interface GetAllPostsFilters {
-  search?: string;
-  userId?: string;
+  search?: string | unknown;
+  userId?: string | unknown;
 }
 
 export const getAllPosts = async ({ search, userId }: GetAllPostsFilters = {}) => {
