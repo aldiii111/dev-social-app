@@ -3,14 +3,12 @@ import SidebarNavigation from '../SidebarNavigation';
 import FeedHeader from '../FeedHeader';
 import MobileBottomNav from '../MobileBottomNav';
 import { TrendingWidget } from '../TrendingWidget';
-import type { TrendingTagView } from '@/features/feed/types';
+import { useTrendingPosts } from '@/hooks/queries/usePost';
 
 export default function MainPageLayout() {
   const navigate = useNavigate();
 
-  // Temporary mock states for trending (will be replaced by TanStack Query / logic by USER)
-  const trends: TrendingTagView[] = [];
-  const isTrendsLoading = false;
+  const { data: trends = [], isPending: isTrendsLoading } = useTrendingPosts();
 
   const handleTrendingTagClick = (tag: string) => {
     navigate(`/feed?search=${encodeURIComponent('#' + tag)}`);
