@@ -26,6 +26,7 @@ export default function AddPostPage() {
     createPostMutation.mutate(formValues, {
       onSuccess: () => {
         setIsSubmitting(false);
+        setFormValues(EMPTY_CREATE_POST_VALUES);
         navigate("/feed")
       },
       onError: (error: any) => {

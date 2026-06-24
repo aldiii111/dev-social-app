@@ -49,7 +49,6 @@ export default function FeedPage() {
   };
 
   const handleContactAuthor = (postId: string) => {
-    // STEP 1: cari post by id, buka author.githubUrl di tab baru
     const post = posts.find((item) => item.id === postId);
     if (post?.author.githubUrl) {
       window.open(post.author.githubUrl, "_blank", "noopener,noreferrer");

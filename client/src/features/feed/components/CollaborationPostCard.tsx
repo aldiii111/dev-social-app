@@ -39,8 +39,8 @@ export default function CollaborationPostCard({
         </div>
 
         <div className="space-y-2">
-          <h3 className="text-lg font-semibold tracking-tight">{post.title}</h3>
-          <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap">
+          <h3 className="text-lg font-semibold tracking-tight text-wrap break-all">{post.title}</h3>
+          <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap text-wrap break-all">
             {post.description}
           </p>
         </div>

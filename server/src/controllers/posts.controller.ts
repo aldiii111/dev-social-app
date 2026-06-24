@@ -1,12 +1,13 @@
 import type { Response } from 'express';
 import type { AuthenticatedRequest } from '../middlewares/authMiddleware.js';
-import { getAllPosts, createNewPost } from '../services/posts.service.js';
+import { getAllPosts, createNewPost, getTrendingStacks } from '../services/posts.service.js';
 import type { CreatePostPayload } from '../services/posts.service.js';
 
 export const getPosts = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const search = typeof req.query.search === 'string' ? req.query.search : undefined;
-    const posts = await getAllPosts(search);
+    const userId = typeof req.query.user_id === 'string' ? req.query.user_id : undefined;
+    const posts = await getAllPosts({ search, userId });
     res.status(200).json({
       data: posts,
       message: 'Posts retrieved successfully',
@@ -42,6 +43,19 @@ export const createPost = async (req: AuthenticatedRequest, res: Response): Prom
     });
   } catch (error: any) {
     console.error('Error creating post:', error);
+    res.status(500).json({ message: error.message || 'Internal server error' });
+  }
+};
+
+export const getTrending = async (_req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const trending = await getTrendingStacks();
+    res.status(200).json({
+      data: trending,
+      message: 'Trending stacks retrieved successfully',
+    });
+  } catch (error: any) {
+    console.error('Error fetching trending stacks:', error);
     res.status(500).json({ message: error.message || 'Internal server error' });
   }
 };

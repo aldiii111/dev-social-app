@@ -54,7 +54,7 @@ export default function CreateCollaborationPostForm({
             onChange={(e) => onFieldChange("title", e.target.value)}
             disabled={isFormDisabled}
             placeholder="Contoh: Side-project SaaS dashboard untuk tim kecil"
-            className="rounded-xl bg-background border-input focus-visible:ring-ring"
+            className="rounded-xl bg-background border-input focus-visible:ring-ring text-wrap break-all"
           />
         </div>
 
@@ -68,7 +68,7 @@ export default function CreateCollaborationPostForm({
             onChange={(e) => onFieldChange("description", e.target.value)}
             disabled={isFormDisabled}
             placeholder="Jelaskan ide proyek, komitmen waktu, dan partner seperti apa yang Anda cari…"
-            className="min-h-[120px] resize-none rounded-xl bg-background border-input focus-visible:ring-ring"
+            className="min-h-[120px] resize-none rounded-xl bg-background border-input focus-visible:ring-ring text-wrap break-all"
           />
         </div>
 

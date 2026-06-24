@@ -3,7 +3,8 @@ export const queryKeys = {
         all: ['posts'] as const,
         list: (filters: string) => ['posts', { filters }] as const,
         detail: (id: string) => ['posts', id] as const,
-        userPost: (id: string) => ['posts', 'user', id] as const
+        userPost: (id: string) => ['posts', 'user', id] as const,
+        trending: ['posts', 'trending'] as const
     },
     user: {
         me: ['user', 'me'] as const,

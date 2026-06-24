@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { fetchPosts, fecthPostUser, createPost } from "@/services/posts.service"
+import { fetchPosts, fetchPostUser, createPost, fetchTrendingPosts } from "@/services/posts.service"
 import { mapPostsToCollaborationViews } from "@/features/feed/utils/mapPostToView"
 import { queryKeys } from "./queryKeys"
 
@@ -13,9 +13,10 @@ export const usePosts = () => {
 
 export const usePostUser = (userId?: string) => {
     return useQuery({
-        queryKey: queryKeys.posts.userPost(userId),
-        queryFn: () => fecthPostUser(userId),
+        queryKey: queryKeys.posts.userPost(userId!),
+        queryFn: () => fetchPostUser(userId!),
         enabled: !!userId,
+        select: (data) => mapPostsToCollaborationViews(data)
     })
 }
 
@@ -27,4 +28,11 @@ export const useCreatePost = () => {
             queryClient.invalidateQueries({ queryKey: queryKeys.posts.all })
         }
     })
+}
+
+export const useTrendingPosts = () => {
+    return useQuery({
+        queryKey: queryKeys.posts.trending,
+        queryFn: fetchTrendingPosts,
+    });
 }
