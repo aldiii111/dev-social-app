@@ -1,8 +1,5 @@
-// TypeScript interfaces for DevConnect API entities
-
 export interface User {
   id: string;
-  // google_id tidak di-expose ke client (sensitive, hanya untuk internal backend)
   name: string;
   email: string;
   avatar_url: string | null;
@@ -26,7 +23,6 @@ export interface Post {
   image_url: string | null;
   looking_for: LookingFor;
   created_at: string;
-  // Joined relations from API
   user: User;
   stacks: PostStack[];
 }
