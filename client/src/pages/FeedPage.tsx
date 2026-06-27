@@ -3,13 +3,11 @@ import CreateCollaborationPostForm from "@/features/feed/components/CreateCollab
 import PostList from "@/features/feed/components/PostList";
 import { usePosts, useCreatePost } from "@/hooks/queries/usePost";
 import type {
-  CollaborationPostView,
   CreateCollaborationPostValues,
 } from "@/features/feed/types";
 import { EMPTY_CREATE_POST_VALUES } from "@/features/feed/types";
 import { useState } from "react";
 import FetchError from "@/components/FetchError";
-import SearchNotFound from "@/components/SearchNotFound";
 
 export default function FeedPage() {
   const [searchParams] = useSearchParams();

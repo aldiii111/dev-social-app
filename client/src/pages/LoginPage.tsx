@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { authService } from "@/services/authService";
@@ -175,8 +175,14 @@ export default function LoginPage() {
                 <div className="space-y-3">
                   <div
                     id="google-signin-btn"
-                    className="w-full flex justify-center py-0.5 rounded-full overflow-hidden transition-all duration-200 hover:scale-[1.02]"
+                    className={`w-full flex justify-center py-0.5 rounded-full overflow-hidden transition-all duration-200 ${loading ? 'opacity-50 pointer-events-none' : 'hover:scale-[1.02]'}`}
                   />
+                  {loading && (
+                    <div className="flex justify-center items-center gap-2 text-sm text-muted-foreground mt-2">
+                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      Authenticating...
+                    </div>
+                  )}
                 </div>
 
                 <div className="relative flex items-center justify-center py-2">
