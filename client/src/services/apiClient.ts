@@ -7,7 +7,7 @@ export const api = axios.create({
     headers: {
         'Content-type': 'application/json',
     },
-    timeout: 10000
+    timeout: 60000 // Diperbesar menjadi 60 detik (karena server Render gratis butuh waktu lama untuk bangun / cold start)
 });
 
 api.interceptors.request.use(
