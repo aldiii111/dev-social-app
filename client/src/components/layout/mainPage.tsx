@@ -4,6 +4,7 @@ import FeedHeader from '../FeedHeader';
 import MobileBottomNav from '../MobileBottomNav';
 import { TrendingWidget } from '../TrendingWidget';
 import { useTrendingPosts } from '@/hooks/queries/usePost';
+import ProfileCompletionBanner from '../ProfileCompletionBanner';
 
 export default function MainPageLayout() {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ export default function MainPageLayout() {
       </div>
 
       <MobileBottomNav />
+      <ProfileCompletionBanner />
     </div>
   );
 }
