@@ -8,6 +8,7 @@ import AddPostPage from "@/pages/AddPostPage";
 import ProfilePage from "@/pages/ProfilePage";
 import { useEffect } from 'react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { Analytics } from "@vercel/analytics/react"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -53,6 +54,7 @@ export default function App() {
           <RouteApp />
         </BrowserRouter>
       </AuthProvider>
+      <Analytics />
     </QueryClientProvider>
   );
 }
