@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import type { FormEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { authService } from "@/services/authService";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Code2, Terminal, Sparkles, AlertCircle, ShieldCheck, Users, Zap } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Code2, Terminal, Sparkles, AlertCircle, ShieldCheck } from "lucide-react";
 
 export default function LoginPage() {
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,57 +23,26 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, navigate]);
 
-  useEffect(() => {
-    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "MOCK_CLIENT_ID";
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!email.trim() || !password) return;
 
-    const initializeGoogle = () => {
-      if (window.google?.accounts?.id) {
-        window.google.accounts.id.initialize({
-          client_id: googleClientId,
-          callback: async (response) => {
-            try {
-              setLoading(true);
-              setError(null);
-              const resData = await authService.loginWithIdToken({
-                id_token: response.credential,
-              });
-              login(resData.user, resData.token);
-              navigate("/feed");
-            } catch (err: any) {
-              console.error("Google Auth Error:", err);
-              setError(
-                err.response?.data?.message ||
-                "Failed to authenticate with Google. Please try again."
-              );
-            } finally {
-              setLoading(false);
-            }
-          },
-          auto_select: false,
-        });
-
-        const btnElement = document.getElementById("google-signin-btn");
-        if (btnElement) {
-          window.google.accounts.id.renderButton(btnElement, {
-            theme: "outline",
-            size: "large",
-            width: btnElement.clientWidth || 320,
-            text: "signin_with",
-            shape: "pill",
-          });
-        }
-      }
-    };
-
-    if (window.google) {
-      initializeGoogle();
-    } else {
-      const script = document.querySelector('script[src*="gsi/client"]');
-      if (script) {
-        script.addEventListener("load", initializeGoogle);
-      }
+    try {
+      setLoading(true);
+      setError(null);
+      const resData = await authService.login({ email, password });
+      login(resData.user, resData.token);
+      navigate("/feed");
+    } catch (err: any) {
+      console.error("Login Error:", err);
+      setError(
+        err.response?.data?.message ||
+        "Email atau password salah. Silakan coba lagi."
+      );
+    } finally {
+      setLoading(false);
     }
-  }, [login, navigate]);
+  };  
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col md:flex-row relative overflow-hidden font-sans transition-colors duration-200">
@@ -156,14 +131,14 @@ export default function LoginPage() {
 
             <CardHeader className="space-y-2.5 pt-8">
               <CardTitle className="text-2xl font-bold tracking-tight text-center md:text-left text-foreground transition-all duration-300">
-                Welcome to DevConnect
+                Masuk ke DevConnect
               </CardTitle>
               <CardDescription className="text-center md:text-left text-muted-foreground">
-                Join the community of developers building the future.
+                Gunakan email dan password Anda untuk melanjutkan.
               </CardDescription>
             </CardHeader>
 
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-5">
               {error && (
                 <div className="flex items-start gap-3 p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm animate-shake">
                   <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
@@ -171,55 +146,56 @@ export default function LoginPage() {
                 </div>
               )}
 
-              <div className="space-y-6">
-                <div className="space-y-3">
-                  <div
-                    id="google-signin-btn"
-                    className={`w-full flex justify-center py-0.5 rounded-full overflow-hidden transition-all duration-200 ${loading ? 'opacity-50 pointer-events-none' : 'hover:scale-[1.02]'}`}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="login-email">Email</Label>
+                  <Input
+                    id="login-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={loading}
+                    placeholder="dev@example.com"
+                    required
+                    className="rounded-xl bg-background"
                   />
-                  {loading && (
-                    <div className="flex justify-center items-center gap-2 text-sm text-muted-foreground mt-2">
-                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                      Authenticating...
-                    </div>
-                  )}
                 </div>
 
-                <div className="relative flex items-center justify-center py-2">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-border" />
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="login-password">Password</Label>
+                  <Input
+                    id="login-password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={loading}
+                    placeholder="••••••••"
+                    required
+                    className="rounded-xl bg-background"
+                  />
                 </div>
 
-                <div className="space-y-4">
-                  <div className="p-4 rounded-xl bg-muted/40 border border-border flex items-start gap-4 transition-colors hover:bg-muted/60">
-                    <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
-                      <Users className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-foreground">Join 10k+ Developers</h4>
-                      <p className="text-xs text-muted-foreground mt-1 leading-relaxed">Connect with peers, find mentors, and build amazing open-source projects together.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 rounded-xl bg-muted/40 border border-border flex items-start gap-4 transition-colors hover:bg-muted/60">
-                    <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-500">
-                      <Zap className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-foreground">Accelerate Your Career</h4>
-                      <p className="text-xs text-muted-foreground mt-1 leading-relaxed">Showcase your tech stack and get discovered by exciting tech companies globally.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full rounded-xl font-semibold"
+                >
+                  {loading ? "Memproses..." : "Masuk"}
+                </Button>
+              </form>
 
+              <p className="text-center text-sm text-muted-foreground">
+                Belum punya akun?{" "}
+                <Link to="/signup" className="font-medium text-primary hover:underline">
+                  Daftar sekarang
+                </Link>
+              </p>
             </CardContent>
 
-            <CardFooter className="pb-8 pt-2 justify-center border-t border-border/50 bg-muted/20">
+            <CardFooter className="pb-8 pt-4 justify-center border-t border-border/50 bg-muted/20">
               <span className="text-xs text-muted-foreground flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                Secured by Google Identity
+                Secured with JWT Authentication
               </span>
             </CardFooter>
           </Card>
