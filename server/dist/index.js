@@ -19,6 +19,6 @@ app.use((err, req, res, next) => {
     });
 });
 app.listen(PORT, () => {
-    console.log(`🚀 DevConnect server is running on http://localhost:${PORT}`);
+    console.log(`DevConnect server is running on http://localhost:${PORT}`);
 });
 //# sourceMappingURL=index.js.map

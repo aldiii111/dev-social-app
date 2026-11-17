@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { loginWithIdToken } from '../controllers/auth.controller.js';
+import { register, login } from '../controllers/auth.controller.js';
 
 const router = Router();
 
-router.post('/google/id-token', loginWithIdToken);
+router.post('/register', register);
+router.post('/login', login);
 
 export default router;

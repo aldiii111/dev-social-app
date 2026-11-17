@@ -1,74 +1,99 @@
-import { OAuth2Client } from 'google-auth-library';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../lib/prismaClient.js';
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-export interface GoogleLoginResult {
-  user: any;
-  token: string;
-  is_new_user: boolean;
+export interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
 }
 
-export const verifyGoogleIdToken = async (idToken: string): Promise<GoogleLoginResult> => {
-  const verifyOptions: any = {
-    idToken,
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export interface AuthResult {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    avatar_url: string | null;
+    github_url: string | null;
+    created_at: Date;
   };
-  if (process.env.GOOGLE_CLIENT_ID) {
-    verifyOptions.audience = process.env.GOOGLE_CLIENT_ID;
-  }
-  const ticket = (await client.verifyIdToken(verifyOptions)) as any;
+  token: string;
+}
 
-  const payload = ticket.getPayload();
-  if (!payload || !payload.sub || !payload.email) {
-    throw new Error('Invalid token payload');
-  }
+const userSelect = {
+  id: true,
+  name: true,
+  email: true,
+  avatar_url: true,
+  github_url: true,
+  created_at: true,
+};
 
-  const googleId = payload.sub;
-  const email = payload.email;
-  const name = payload.name || 'Anonymous Developer';
-  const avatarUrl = payload.picture || null;
+const signToken = (userId: string): string => {
+  const jwtSecret = process.env.JWT_SECRET || 'fallback_secret_key';
+  return jwt.sign({ userId }, jwtSecret, { expiresIn: '7d' });
+};
 
-  // Cek apakah user sudah ada
-  let user = await prisma.user.findUnique({
-    where: { google_id: googleId },
+export const registerUser = async (payload: RegisterPayload): Promise<AuthResult> => {
+  const email = payload.email.trim().toLowerCase();
+  const name = payload.name.trim();
+
+  const existingUser = await prisma.user.findUnique({
+    where: { email },
   });
 
-  let isNewUser = false;
-
-  if (!user) {
-    // Cek apakah email sudah terpakai
-    const existingEmailUser = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (existingEmailUser) {
-      // Hubungkan akun google ke email yang sudah ada
-      user = await prisma.user.update({
-        where: { email },
-        data: { google_id: googleId },
-      });
-    } else {
-      // Buat user baru
-      user = await prisma.user.create({
-        data: {
-          google_id: googleId,
-          email,
-          name,
-          avatar_url: avatarUrl,
-        },
-      });
-      isNewUser = true;
-    }
+  if (existingUser) {
+    throw new Error('Email sudah terdaftar');
   }
 
-  // Generate JWT token
-  const jwtSecret = process.env.JWT_SECRET || 'fallback_secret_key';
-  const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '7d' });
+  const hashedPassword = await bcrypt.hash(payload.password, 10);
+
+  const user = await prisma.user.create({
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+    },
+    select: userSelect,
+  });
+
+  const token = signToken(user.id);
+
+  return { user, token };
+};
+
+export const loginUser = async (payload: LoginPayload): Promise<AuthResult> => {
+  const email = payload.email.trim().toLowerCase();
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!user) {
+    throw new Error('Email atau password salah');
+  }
+
+  const isPasswordValid = await bcrypt.compare(payload.password, user.password);
+  if (!isPasswordValid) {
+    throw new Error('Email atau password salah');
+  }
+
+  const token = signToken(user.id);
 
   return {
-    user,
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      avatar_url: user.avatar_url,
+      github_url: user.github_url,
+      created_at: user.created_at,
+    },
     token,
-    is_new_user: isNewUser,
   };
 };

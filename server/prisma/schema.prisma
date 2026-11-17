@@ -17,9 +17,9 @@ datasource db {
 
 model User {
   id          String   @id @default(uuid())
-  google_id   String   @unique
   name        String
   email       String   @unique
+  password    String
   avatar_url  String?
   github_url  String?
   created_at  DateTime @default(now())
