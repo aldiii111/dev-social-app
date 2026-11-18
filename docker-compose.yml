@@ -1,0 +1,57 @@
+service:
+  postgres:
+    image: postgres:16-alpine
+    container_name: devconnect_db
+    restart: unless_stopped
+    environment:
+      POSTGRES_USER: postgres-devcon
+      POSTGRES_PASSWORD: postgres-devcon-pw
+      POSTGRES_DB: devconnect
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD SHELL", "pg_isready -U postgres-devcon -d devconnect"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: devconnect-server
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      NODE_ENV: development
+      DATABASE_URL: "postgresql://postgres-devcon:postgres-devcon-pw@postgres:5432/devsocial?schema=public"
+      DIRECT_URL: "postgresql://postgres-devcon:postgres-devcon-pw@postgres:5432/devsocial?schema=public"
+      JWT_SECRET: "devconnect_super_secret_jwt_key_docker"
+    depends_on: 
+      - postgres
+    volumes: 
+      - ./server/app
+      - /app/node_modules
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: devconnect-client
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: "http://localhost:3000"
+    depends_on:
+      - server
+    volumes:
+      - ./client/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
