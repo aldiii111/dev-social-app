@@ -1,136 +1,145 @@
-<div align="center">
-  <h1>DevConnect</h1>
-  <p><b>The Collaboration Hub for Developers</b></p>
-  
-  [![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
-  [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-  [![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)](https://expressjs.com/)
-  [![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)](https://prisma.io/)
-  [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org/)
-</div>
+# DevConnect
 
-<br />
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma_ORM-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
-## Halo! Selamat Datang di DevConnect 👋
+DevConnect is a full-stack web project I built to practice building end-to-end applications from scratch.
 
-Pernah merasa mentok saat ingin bikin aplikasi impian karena butuh bantuan teman yang jago desain atau *backend*? Atau sekadar ingin mulai bikin *side-project* untuk mempercantik portofolio tapi bingung mulai dari mana?
+The idea is simple: a space where developers can share side-project ideas and find collaboration partners based on specific roles (Frontend, Backend, UI/UX, etc.) and the tech stack used.
 
-Nah, di sinilah **DevConnect** hadir. 
+> ⚠️ **Note:** This project is still under active development and improvement.
 
-Singkatnya, ini adalah wadah tempat para *developer* ngumpul. Anda bisa dengan mudah membagikan ide proyek yang sedang Anda kerjakan, mencari *partner* kolaborasi yang punya *skill* pas dengan kebutuhan, atau bahkan bergabung dengan ide-ide seru dari teman-teman lain.
+🔗 **Live Demo:** [devconnect-tan-gamma.vercel.app](https://devconnect-tan-gamma.vercel.app/)  
+> *Note on Demo: The backend is hosted on Render's free tier. If the server is in sleep mode (idle), the initial request takes around 30–50 seconds to spin up.*
 
 ---
 
-## Apa Saja yang Bisa Dilakukan?
+## Why I Built This Project
 
-- **Login Super Praktis:** Tinggal sekali klik pakai akun Google (Google OAuth). Nggak perlu repot bikin dan hapal *password* baru.
-- **Feed Interaktif:** Ngobrol, cari *partner*, dan posting ajakan kolaborasi proyek dengan mudah di linimasa utama.
-- **Profil Spesialis Anda:** Pamerkan *skill* andalan Anda! Profil ini membantu teman-teman lain untuk melirik Anda saat mereka butuh kolaborator.
-- **Navigasi Mulus:** Karena dibangun dengan arsitektur React *Single Page Application*, ngeklik sana-sini terasa instan tanpa harus nunggu loading halaman terus-menerus.
+The main goal of this project was to deepen my understanding of real-world full-stack workflows beyond simple CRUD tutorials.
 
----
+Many junior and mid-level developers have great side-project ideas but struggle to find partners with complementary skills (e.g., a frontend developer needing a backend partner). I created DevConnect to address that need: a platform focused on specific roles and tech stacks.
 
-## Dapur Teknologi (Tech Stack)
-
-Walau tampilannya simpel, mesin di baliknya lumayan kokoh. Ini dia alat-alat yang kami pakai:
-
-**Di Balik Layar Frontend**
-- **React.js & Vite:** Biar aplikasinya kencang dan gampang dikembangkan.
-- **Tailwind CSS & Radix UI:** Rahasia kenapa tampilannya rapi, *accessible*, dan modern.
-- **Axios:** Jembatan komunikasi yang aman ke backend.
-
-**Di Balik Layar Backend**
-- **Node.js & Express.js:** Menangani semua aliran data API.
-- **PostgreSQL & Prisma ORM:** Kombinasi asik buat nyimpan database yang super aman dan minim *bug* saat ngoding.
-- **JSON Web Token (JWT):** Penjaga gerbang keamanan biar nggak sembarang orang bisa ngerubah data.
+Through this project, I wanted to learn hands-on how to:
+- Build a custom authentication flow from scratch.
+- Manage PostgreSQL database relationships using an ORM.
+- Connect a client-side app (Vite/React) with a REST API (Express).
+- Troubleshoot real-world technical issues that only surface after deploying to production.
 
 ---
 
-## Yuk, Cobain Langsung!
+## Tech Stack I Used
 
-Kami sudah men-deploy aplikasi ini supaya bisa Anda coba kapan saja. 
-**[Main ke DevConnect Sekarang](https://devconnect-tan-gamma.vercel.app/)**
-
-> *Sedikit info: Karena backend-nya pakai layanan gratis, kalau lagi sepi dia suka "ketiduran". Jadi pas pertama kali buka, mungkin butuh waktu sekitar 30 detik untuk nungguin servernya melek lagi ya.*
+- **Frontend:** React, TypeScript, Vite, Tailwind CSS, Radix UI, Axios
+- **Backend:** Node.js, Express.js, TypeScript
+- **Database:** PostgreSQL with Prisma ORM
+- **Security:** JSON Web Token (JWT) & Bcrypt
+- **Deployment & Tooling:** Vercel (Frontend), Render (Backend), Docker Compose
 
 ---
 
-## Mau Coba Jalankan Sendiri di Laptopmu?
+## Features
 
-Seru juga lho kalau mau oprek-oprek kode sendiri. Ikuti panduan santai ini:
+- **Account Authentication:** User registration and login using email & password. Passwords are hashed using bcrypt, and user sessions are managed with JWT.
+- **Project Collaboration Posts:** Create project posts, specify the roles needed (Frontend, Backend, DevOps, etc.), and add relevant tech stack tags.
+- **Project Feed:** Browse active project posts looking for teammates from other developers.
+- **User Profile:** View account summary and a list of created projects along with a GitHub link.
+- **Auto Logout / Interceptor:** If the token expires, the application automatically redirects the user back to the login page.
 
-### 1. Ambil Kodenya (Clone)
+---
+
+## What I Learned From This Project
+
+Here are some real-world challenges I ran into while building this and how I solved them:
+
+### 1. Handling Cold Starts on a Free-Tier Server
+When I first deployed the backend to Render (free tier), the server automatically spun down into sleep mode whenever there was no traffic. The issue was that the initial request from the frontend often failed because Axios's default timeout was too short (~5 seconds), making users think the app was broken.
+- **Solution:** I set Axios's timeout to 60 seconds (`timeout: 60000`) and made sure the UI showed a clear loading state so users knew the server was just spinning up.
+
+### 2. 404 Errors When Refreshing on Vercel (SPA Routing)
+The app worked completely fine when navigating around using links or buttons. But whenever I refreshed a page like `/login` or `/feed`, Vercel immediately threw a 404 error.
+- **Solution:** I learned that static web servers look for physical files matching the URL path. In a Single Page Application (SPA), routing is handled on the client side by React Router. I solved this by adding rewrite rules in `vercel.json` to route all incoming requests back to `index.html`.
+
+### 3. Building an Authentication Pipeline from Scratch
+Initially, I tried logging in with Google OAuth, but I decided to refactor it into a custom email & password system.
+- **Why & What I Learned:** I wanted to truly understand the authentication lifecycle from the ground up: how to securely hash passwords with bcrypt, create stateless JWT tokens, store tokens on the client, and build custom Express middleware to protect private API routes.
+
+### 4. Modeling Relational Data with Prisma ORM
+This app required clear data relationships between users, project posts, and required tech stack tags.
+- **What I Learned:** I learned how to model one-to-many relationships in Prisma, use database enums for role categories, and configure `onDelete: Cascade`. With cascade deletes, deleting a post automatically removes its associated tech tags, keeping the database clean without orphan records.
+
+### 5. Containerizing the App with Docker
+Setting up PostgreSQL locally on different development machines often resulted in mismatched versions and configuration conflicts.
+- **What I Learned:** I created Dockerfiles for both backend and frontend, then tied them together with PostgreSQL using `docker-compose.yml`. Now, the entire project can be spun up on any machine with a single command without needing PostgreSQL installed directly on the host OS.
+
+---
+
+## Running the Project Locally
+
+### Option 1: Using Docker Compose (Recommended)
+If you have Docker installed:
+
 ```bash
-git clone https://github.com/USERNAME_ANDA/dev-social-app.git
+git clone https://github.com/aldiii111/dev-social-app.git
 cd dev-social-app
-```
 
-### 2. Nyalakan Backend (Server)
-Buka terminal dan jalankan:
+# Run all services together
+docker compose up --build
+```
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:3000`
+
+---
+
+### Option 2: Running Manually (pnpm)
+
+#### 1. Backend Setup
 ```bash
 cd server
 pnpm install
 
-# Bikin file rahasia .env
-cp .env.example .env 
+# Create environment file
+cp .env.example .env
 
-# Sinkronisasi tabel ke database kamu
+# Push Prisma schema to your local PostgreSQL database
 pnpm prisma db push
 
-# Nyalakan servernya!
+# Start backend
 pnpm dev
 ```
-*Sip! Backend jalan di `http://localhost:3000`*
 
-### 3. Nyalakan Frontend (Client)
-Buka tab terminal baru:
+#### 2. Frontend Setup
+Open a new terminal tab:
 ```bash
 cd client
 pnpm install
 
-# Bikin file .env (lihat panduan di bawah ya)
-cp .env.example .env 
+# Create environment file
+cp .env.example .env
 
-# Nyalakan tampilannya!
+# Start frontend
 pnpm dev
 ```
-*Frontend kamu jalan di `http://localhost:5173`*
 
 ---
 
-## Kunci Rahasia (.env)
+## Environment Variables Configuration
 
-Kamu wajib punya file `.env` di folder server dan client agar aplikasinya bisa nyambung. Formatnya begini:
-
-**Buat di dalam folder `/server/.env`:**
+**`server/.env`**
 ```env
-# Hubungkan ke database Postgres kamu (misalnya dari Supabase atau lokal)
-DATABASE_URL="postgres://username_kamu:password_rahasia@host_db_kamu:6543/nama_db?pgbouncer=true"
-DIRECT_URL="postgres://username_kamu:password_rahasia@host_db_kamu:5432/nama_db"
-
-# Kunci untuk bikin tiket JWT
-JWT_SECRET="tulis_bebas_rahasia_kamu_di_sini"
-
-# Kunci untuk Login Google
-GOOGLE_CLIENT_ID="123456789-idklienkamu.apps.googleusercontent.com"
-
-# Alamat frontend biar nggak kena error CORS
-FRONTEND_URL="http://localhost:5173"
+PORT=3000
+NODE_ENV=development
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/devsocial?schema=public"
+DIRECT_URL="postgresql://postgres:postgres@localhost:5432/devsocial?schema=public"
+JWT_SECRET="your_custom_jwt_secret"
 ```
 
-**Buat di dalam folder `/client/.env`:**
+**`client/.env`**
 ```env
-# Kunci untuk memunculkan tombol Login Google
-VITE_GOOGLE_CLIENT_ID="123456789-idklienkamu.apps.googleusercontent.com"
-
-# Kosongin aja baris ini kalau kamu lagi ngoding di laptop (biar otomatis nembak proxy).
-# Nah, kalau mau di-deploy ke Vercel/Netlify, baru deh diisi URL backend kamu.
-# VITE_API_URL="URL_BACKEND_KAMU_KALAU_UDAH_ONLINE" 
+VITE_API_URL=http://localhost:3000
 ```
-
----
-
-## Ikut Berkontribusi? Boleh Banget!
-
-Punya ide fitur seru? Atau ketemu kutu (*bug*) nyebelin? Kami *welcome* banget kalau kamu mau bantu beresin. Langsung aja *fork* repository ini, tambahkan kodemu, dan ajukan *Pull Request* (PR). Mari sama-sama jadikan DevConnect lebih keren!
