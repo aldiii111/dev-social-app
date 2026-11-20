@@ -10,8 +10,11 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN pnpm prisma generate 
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+
+RUN npx prisma generate
 
 EXPOSE 3000
 
-CMD sh -c "pnpm prisma db push && pnpm dev"
+CMD sh -c "npx prisma db push --accept-data-loss && pnpm run dev"
