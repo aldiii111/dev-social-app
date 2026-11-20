@@ -82,21 +82,26 @@ Setting up PostgreSQL locally on different development machines often resulted i
 ## Running the Project Locally
 
 ### Option 1: Using Docker Compose (Recommended)
-If you have Docker installed:
+You don't need Node.js or PostgreSQL installed on your machine. Docker handles the database, migrations, backend, and frontend automatically:
 
 ```bash
 git clone https://github.com/aldiii111/dev-social-app.git
 cd dev-social-app
 
-# Run all services together
+# Run all services together (database, backend, and frontend)
 docker compose up --build
 ```
-- Frontend: `http://localhost:5173`
-- Backend: `http://localhost:3000`
+- **Frontend:** [http://localhost:5173](http://localhost:5173)
+- **Backend API:** [http://localhost:3000](http://localhost:3000)
+- **PostgreSQL Database:** `localhost:5432` (User: `postgres-devcon`, DB: `devconnect`)
+
+*Tip: Press `Ctrl + C` or run `docker compose down` to stop all containers.*
 
 ---
 
 ### Option 2: Running Manually (pnpm)
+
+If you prefer running without Docker, make sure you have **PostgreSQL** running locally and **pnpm v9** installed.
 
 #### 1. Backend Setup
 ```bash
@@ -130,12 +135,14 @@ pnpm dev
 
 ## Environment Variables Configuration
 
+If running **manually (Option 2)**, make sure your `.env` files are configured:
+
 **`server/.env`**
 ```env
 PORT=3000
 NODE_ENV=development
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/devsocial?schema=public"
-DIRECT_URL="postgresql://postgres:postgres@localhost:5432/devsocial?schema=public"
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/devconnect?schema=public"
+DIRECT_URL="postgresql://postgres:postgres@localhost:5432/devconnect?schema=public"
 JWT_SECRET="your_custom_jwt_secret"
 ```
 
